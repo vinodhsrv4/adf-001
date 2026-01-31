@@ -1,0 +1,22 @@
+{
+	"name": "Salesforce1",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "SalesforceV2",
+		"typeProperties": {
+			"environmentUrl": "https://orgfarm-107b26280c-dev-ed.develop.my.salesforce.com",
+			"clientId": "3MVG9dAEux2v1sLtus17ywsQwDzMSVOljSOou2kzFecdAy_.Z..aKbrsak6rjY1bb9OkomOWLEr7fqrmYZdxi",
+			"clientSecret": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "AzureKeyVault1",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "sf-consumer-secret"
+			},
+			"apiVersion": "59.0",
+			"authenticationType": "OAuth2ClientCredential"
+		}
+	}
+}
