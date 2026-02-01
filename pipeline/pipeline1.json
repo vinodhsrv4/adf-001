@@ -17,7 +17,6 @@
 				"typeProperties": {
 					"source": {
 						"type": "SalesforceV2Source",
-						"query": "SELECT Id, Name, AccountNumber, BillingCity FROM Account\nLIMIT 5",
 						"includeDeletedObjects": false,
 						"partitionOption": "AutoDetect"
 					},
