@@ -10,8 +10,15 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"folderPath": "data01",
-				"fileSystem": "salesforce"
+				"fileName": {
+					"value": "@concat('account_', formatDateTime(utcNow(), 'yyMMdd_HHmmss'), '.csv')",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@concat('salesforce/account/', formatDateTime(utcNow(), 'yyyy'), '/', formatDateTime(utcNow(), 'MM'))",
+					"type": "Expression"
+				},
+				"fileSystem": "salesforce-raw"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
