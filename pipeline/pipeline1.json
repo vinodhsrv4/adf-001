@@ -25,7 +25,7 @@
 					"source": {
 						"type": "SalesforceV2Source",
 						"query": {
-							"value": "SELECT Id, IsDeleted, Name, Type, BillingCity, BillingCountry, AccountNumber,\n       Industry, CreatedDate, LastModifiedDate, SystemModstamp\nFROM Account\nWHERE SystemModstamp > @{activity('LookUp Last Watermark').output.firstRow.last_run_time}",
+							"value": "SELECT Id, IsDeleted, Name, Type, BillingCity, BillingCountry, AccountNumber,\n       Industry, CreatedDate, LastModifiedDate, SystemModstamp\nFROM Account\nWHERE SystemModstamp > @{formatDateTime(activity('LookUp Last Watermark').output.firstRow.last_run_time, 'yyyy-MM-ddTHH:mm:ssZ')}",
 							"type": "Expression"
 						},
 						"includeDeletedObjects": false,
@@ -253,7 +253,7 @@
 						{
 							"type": "Query",
 							"text": {
-								"value": "UPDATE dbo.sf_watermark\nSET last_run_time = @{formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')},\n    last_run_status = 'Success',\n    record_count = @{activity('Get data from SF').output.rowsCopied}\nWHERE object_name = 'Account';",
+								"value": "UPDATE dbo.sf_watermark\nSET last_run_time = '@{formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')}',\n    last_run_status = 'Success',\n    record_count = @{activity('Get data from SF').output.rowsCopied}\nWHERE object_name = 'Account';",
 								"type": "Expression"
 							}
 						}
