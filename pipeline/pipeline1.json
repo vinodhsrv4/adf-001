@@ -5,7 +5,14 @@
 			{
 				"name": "Get data from SF",
 				"type": "Copy",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "LookUp Last Watermark",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -17,7 +24,6 @@
 				"typeProperties": {
 					"source": {
 						"type": "SalesforceV2Source",
-						"query": "SELECT Id, IsDeleted, Name, Type, BillingCity, BillingCountry, AccountNumber, \t\nIndustry, CreatedDate, LastModifiedDate, SystemModstamp\nFROM Account",
 						"includeDeletedObjects": false,
 						"partitionOption": "AutoDetect"
 					},
@@ -188,6 +194,32 @@
 						"type": "DatasetReference"
 					}
 				]
+			},
+			{
+				"name": "LookUp Last Watermark",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT last_run_time FROM dbo.sf_watermark\nWHERE object_name = 'Account'\n",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "azure_sql_ds",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": true
+				}
 			}
 		],
 		"annotations": [],
