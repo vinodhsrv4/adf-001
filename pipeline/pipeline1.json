@@ -24,6 +24,10 @@
 				"typeProperties": {
 					"source": {
 						"type": "SalesforceV2Source",
+						"query": {
+							"value": "SELECT Id, IsDeleted, Name, Type, BillingCity, BillingCountry, AccountNumber,\n       Industry, CreatedDate, LastModifiedDate, SystemModstamp\nFROM Account\nWHERE SystemModstamp > @{activity('LookUp Last Watermark').output.firstRow.last_run_time}",
+							"type": "Expression"
+						},
 						"includeDeletedObjects": false,
 						"partitionOption": "AutoDetect"
 					},
@@ -219,6 +223,42 @@
 						"type": "DatasetReference"
 					},
 					"firstRowOnly": true
+				}
+			},
+			{
+				"name": "Script1",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Get data from SF",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "azure_sql_db_ls",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": {
+								"value": "UPDATE dbo.sf_watermark\nSET last_run_time = @{formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')},\n    last_run_status = 'Success',\n    record_count = @{activity('Get data from SF').output.rowsCopied}\nWHERE object_name = 'Account';",
+								"type": "Expression"
+							}
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
 				}
 			}
 		],
