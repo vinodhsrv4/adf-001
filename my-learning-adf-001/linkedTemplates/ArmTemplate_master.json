@@ -11,6 +11,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'AzureDataLakeStorage1'"
 		},
+		"azure_sql_db_ls_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'azure_sql_db_ls'"
+		},
 		"AzureDataLakeStorage1_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://skillupsa001.dfs.core.windows.net/"
@@ -26,6 +30,18 @@
 		"Salesforce1_properties_typeProperties_clientId": {
 			"type": "string",
 			"defaultValue": "3MVG9dAEux2v1sLtus17ywsQwDzMSVOljSOou2kzFecdAy_.Z..aKbrsak6rjY1bb9OkomOWLEr7fqrmYZdxi"
+		},
+		"azure_sql_db_ls_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "sql-server-learn.database.windows.net"
+		},
+		"azure_sql_db_ls_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "sql-db-01"
+		},
+		"azure_sql_db_ls_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "srvinodh"
 		},
 		"containerUri": {
 			"type": "string",
@@ -57,11 +73,23 @@
 					"AzureDataLakeStorage1_accountKey": {
 						"value": "[parameters('AzureDataLakeStorage1_accountKey')]"
 					},
+					"azure_sql_db_ls_password": {
+						"value": "[parameters('azure_sql_db_ls_password')]"
+					},
 					"AzureDataLakeStorage1_properties_typeProperties_url": {
 						"value": "[parameters('AzureDataLakeStorage1_properties_typeProperties_url')]"
 					},
 					"AzureKeyVault1_properties_typeProperties_baseUrl": {
 						"value": "[parameters('AzureKeyVault1_properties_typeProperties_baseUrl')]"
+					},
+					"azure_sql_db_ls_properties_typeProperties_server": {
+						"value": "[parameters('azure_sql_db_ls_properties_typeProperties_server')]"
+					},
+					"azure_sql_db_ls_properties_typeProperties_database": {
+						"value": "[parameters('azure_sql_db_ls_properties_typeProperties_database')]"
+					},
+					"azure_sql_db_ls_properties_typeProperties_userName": {
+						"value": "[parameters('azure_sql_db_ls_properties_typeProperties_userName')]"
 					},
 					"Salesforce1_properties_typeProperties_environmentUrl": {
 						"value": "[parameters('Salesforce1_properties_typeProperties_environmentUrl')]"

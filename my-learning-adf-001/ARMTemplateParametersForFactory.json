@@ -8,6 +8,9 @@
 		"AzureDataLakeStorage1_accountKey": {
 			"value": ""
 		},
+		"azure_sql_db_ls_password": {
+			"value": ""
+		},
 		"AzureDataLakeStorage1_properties_typeProperties_url": {
 			"value": "https://skillupsa001.dfs.core.windows.net/"
 		},
@@ -19,6 +22,15 @@
 		},
 		"Salesforce1_properties_typeProperties_clientId": {
 			"value": "3MVG9dAEux2v1sLtus17ywsQwDzMSVOljSOou2kzFecdAy_.Z..aKbrsak6rjY1bb9OkomOWLEr7fqrmYZdxi"
+		},
+		"azure_sql_db_ls_properties_typeProperties_server": {
+			"value": "sql-server-learn.database.windows.net"
+		},
+		"azure_sql_db_ls_properties_typeProperties_database": {
+			"value": "sql-db-01"
+		},
+		"azure_sql_db_ls_properties_typeProperties_userName": {
+			"value": "srvinodh"
 		}
 	}
 }
