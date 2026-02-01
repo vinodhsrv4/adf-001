@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "my-learning-adf-001"
+		},
+		"AzureDataLakeStorage1_accountKey": {
+			"value": ""
+		},
+		"AzureDataLakeStorage1_properties_typeProperties_url": {
+			"value": "https://skillupsa001.dfs.core.windows.net/"
+		},
+		"AzureKeyVault1_properties_typeProperties_baseUrl": {
+			"value": "https://learning-kv-01.vault.azure.net/"
+		},
+		"Salesforce1_properties_typeProperties_environmentUrl": {
+			"value": "https://orgfarm-107b26280c-dev-ed.develop.my.salesforce.com"
+		},
+		"Salesforce1_properties_typeProperties_clientId": {
+			"value": "3MVG9dAEux2v1sLtus17ywsQwDzMSVOljSOou2kzFecdAy_.Z..aKbrsak6rjY1bb9OkomOWLEr7fqrmYZdxi"
+		}
+	}
+}
