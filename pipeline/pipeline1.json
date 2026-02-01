@@ -17,6 +17,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SalesforceV2Source",
+						"query": "SELECT Id, IsDeleted, Name, Type, BillingCity, BillingCountry, AccountNumber, \t\nIndustry, CreatedDate, LastModifiedDate, SystemModstamp\nFROM Account",
 						"includeDeletedObjects": false,
 						"partitionOption": "AutoDetect"
 					},
@@ -49,12 +50,60 @@
 							},
 							{
 								"source": {
+									"name": "IsDeleted",
+									"type": "Boolean",
+									"physicalType": "boolean"
+								},
+								"sink": {
+									"name": "IsDeleted",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
 									"name": "Name",
 									"type": "String",
 									"physicalType": "string"
 								},
 								"sink": {
 									"name": "Name",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "Type",
+									"type": "String",
+									"physicalType": "picklist"
+								},
+								"sink": {
+									"name": "Type",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "BillingCity",
+									"type": "String",
+									"physicalType": "string"
+								},
+								"sink": {
+									"name": "BillingCity",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "BillingCountry",
+									"type": "String",
+									"physicalType": "string"
+								},
+								"sink": {
+									"name": "BillingCountry",
 									"type": "String",
 									"physicalType": "String"
 								}
@@ -73,12 +122,48 @@
 							},
 							{
 								"source": {
-									"name": "BillingCity",
+									"name": "Industry",
 									"type": "String",
-									"physicalType": "string"
+									"physicalType": "picklist"
 								},
 								"sink": {
-									"name": "BillingCity",
+									"name": "Industry",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "CreatedDate",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "CreatedDate",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "LastModifiedDate",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "LastModifiedDate",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "SystemModstamp",
+									"type": "DateTime",
+									"physicalType": "datetime"
+								},
+								"sink": {
+									"name": "SystemModstamp",
 									"type": "String",
 									"physicalType": "String"
 								}
