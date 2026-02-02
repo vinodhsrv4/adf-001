@@ -1,0 +1,69 @@
+{
+	"name": "pipeline2",
+	"properties": {
+		"description": "To fetch records form SF Account and ingest to Accounts table in SQL db",
+		"activities": [
+			{
+				"name": "Lookup Last Run Time",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT last_run_time FROM dbo.sf_watermark\nWHERE object_name = 'Account'",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "az_sql_db_watermark",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "Copy Data From Accounts",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Lookup Last Run Time",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SalesforceV2Source",
+						"query": "SELECT Id, IsDeleted, Name, Type, BillingCity, BillingCountry, AccountNumber,\n       Industry, CreatedDate, LastModifiedDate, SystemModstamp\nFROM Account",
+						"includeDeletedObjects": false,
+						"partitionOption": "AutoDetect"
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "SalesforceObject1",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"annotations": []
+	}
+}

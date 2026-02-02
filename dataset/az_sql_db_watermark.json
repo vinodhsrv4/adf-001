@@ -1,5 +1,5 @@
 {
-	"name": "azure_sql_ds",
+	"name": "az_sql_db_watermark",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "azure_sql_db_ls",

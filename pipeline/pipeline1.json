@@ -219,7 +219,7 @@
 						"partitionOption": "None"
 					},
 					"dataset": {
-						"referenceName": "azure_sql_ds",
+						"referenceName": "az_sql_db_watermark",
 						"type": "DatasetReference"
 					},
 					"firstRowOnly": true
