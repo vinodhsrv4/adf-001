@@ -1,13 +1,39 @@
 {
-	"name": "pipeline1",
+	"name": "pipeline2",
 	"properties": {
+		"description": "To fetch records form SF Account and ingest to Accounts table in SQL db",
 		"activities": [
 			{
-				"name": "Get data from SF",
+				"name": "Lookup Last Run Time",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT last_run_time FROM dbo.sf_watermark\nWHERE object_name = 'Account'",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "az_sql_db_watermark_ds",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "Copy Data From Accounts",
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "LookUp Last Watermark",
+						"activity": "Lookup Last Run Time",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -25,24 +51,26 @@
 					"source": {
 						"type": "SalesforceV2Source",
 						"query": {
-							"value": "SELECT Id, IsDeleted, Name, Type, BillingCity, BillingCountry, AccountNumber,\n       Industry, CreatedDate, LastModifiedDate, SystemModstamp\nFROM Account\nWHERE SystemModstamp > @{formatDateTime(activity('LookUp Last Watermark').output.firstRow.last_run_time, 'yyyy-MM-ddTHH:mm:ssZ')}",
+							"value": "SELECT Id, IsDeleted, Name, Type, BillingCity, BillingCountry, AccountNumber,\n       Industry, CreatedDate, LastModifiedDate, SystemModstamp\nFROM Account\nWHERE SystemModstamp > @{formatDateTime(activity('Lookup Last Run Time').output.firstRow.last_run_time, 'yyyy-MM-ddTHH:mm:ssZ')}",
 							"type": "Expression"
 						},
 						"includeDeletedObjects": false,
 						"partitionOption": "AutoDetect"
 					},
 					"sink": {
-						"type": "DelimitedTextSink",
-						"storeSettings": {
-							"type": "AzureBlobFSWriteSettings"
+						"type": "AzureSqlSink",
+						"writeBehavior": "upsert",
+						"upsertSettings": {
+							"useTempDB": true,
+							"keys": [
+								"Id"
+							]
 						},
-						"formatSettings": {
-							"type": "DelimitedTextWriteSettings",
-							"quoteAllText": true,
-							"fileExtension": ".txt"
-						}
+						"sqlWriterUseTableLock": false,
+						"disableMetricsCollection": false
 					},
 					"enableStaging": false,
+					"dataIntegrationUnits": 4,
 					"translator": {
 						"type": "TabularTranslator",
 						"mappings": [
@@ -55,7 +83,7 @@
 								"sink": {
 									"name": "Id",
 									"type": "String",
-									"physicalType": "String"
+									"physicalType": "varchar"
 								}
 							},
 							{
@@ -66,8 +94,8 @@
 								},
 								"sink": {
 									"name": "IsDeleted",
-									"type": "String",
-									"physicalType": "String"
+									"type": "Boolean",
+									"physicalType": "bit"
 								}
 							},
 							{
@@ -79,7 +107,7 @@
 								"sink": {
 									"name": "Name",
 									"type": "String",
-									"physicalType": "String"
+									"physicalType": "varchar"
 								}
 							},
 							{
@@ -91,7 +119,7 @@
 								"sink": {
 									"name": "Type",
 									"type": "String",
-									"physicalType": "String"
+									"physicalType": "varchar"
 								}
 							},
 							{
@@ -103,7 +131,7 @@
 								"sink": {
 									"name": "BillingCity",
 									"type": "String",
-									"physicalType": "String"
+									"physicalType": "varchar"
 								}
 							},
 							{
@@ -115,7 +143,7 @@
 								"sink": {
 									"name": "BillingCountry",
 									"type": "String",
-									"physicalType": "String"
+									"physicalType": "varchar"
 								}
 							},
 							{
@@ -127,7 +155,7 @@
 								"sink": {
 									"name": "AccountNumber",
 									"type": "String",
-									"physicalType": "String"
+									"physicalType": "varchar"
 								}
 							},
 							{
@@ -139,7 +167,7 @@
 								"sink": {
 									"name": "Industry",
 									"type": "String",
-									"physicalType": "String"
+									"physicalType": "varchar"
 								}
 							},
 							{
@@ -150,8 +178,8 @@
 								},
 								"sink": {
 									"name": "CreatedDate",
-									"type": "String",
-									"physicalType": "String"
+									"type": "DateTime",
+									"physicalType": "datetime2"
 								}
 							},
 							{
@@ -162,8 +190,8 @@
 								},
 								"sink": {
 									"name": "LastModifiedDate",
-									"type": "String",
-									"physicalType": "String"
+									"type": "DateTime",
+									"physicalType": "datetime2"
 								}
 							},
 							{
@@ -174,8 +202,8 @@
 								},
 								"sink": {
 									"name": "SystemModstamp",
-									"type": "String",
-									"physicalType": "String"
+									"type": "DateTime",
+									"physicalType": "datetime2"
 								}
 							}
 						],
@@ -194,15 +222,22 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "DelimitedText1",
+						"referenceName": "az_sql_db_accounts_ds",
 						"type": "DatasetReference"
 					}
 				]
 			},
 			{
-				"name": "LookUp Last Watermark",
+				"name": "Lookup Max Last Run Time",
 				"type": "Lookup",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Copy Data From Accounts",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -213,24 +248,23 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "AzureSqlSource",
-						"sqlReaderQuery": "SELECT last_run_time FROM dbo.sf_watermark\nWHERE object_name = 'Account'\n",
-						"queryTimeout": "02:00:00",
-						"partitionOption": "None"
+						"type": "SalesforceV2Source",
+						"query": "SELECT MAX(SystemModstamp) last_run_time From Account",
+						"includeDeletedObjects": false,
+						"partitionOption": "AutoDetect"
 					},
 					"dataset": {
-						"referenceName": "az_sql_db_watermark",
+						"referenceName": "SalesforceObject1",
 						"type": "DatasetReference"
-					},
-					"firstRowOnly": true
+					}
 				}
 			},
 			{
-				"name": "Script1",
+				"name": "Update Last Run Time",
 				"type": "Script",
 				"dependsOn": [
 					{
-						"activity": "Get data from SF",
+						"activity": "Lookup Max Last Run Time",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -253,7 +287,7 @@
 						{
 							"type": "Query",
 							"text": {
-								"value": "UPDATE dbo.sf_watermark\nSET last_run_time = '@{formatDateTime(utcNow(), 'yyyy-MM-dd HH:mm:ss')}',\n    last_run_status = 'Success',\n    record_count = @{activity('Get data from SF').output.rowsCopied}\nWHERE object_name = 'Account';",
+								"value": "UPDATE dbo.sf_watermark\nSET last_run_time = '@{formatDateTime(activity('Lookup Max Last Run Time').output.firstRow.last_run_time, 'yyyy-MM-dd HH:mm:ss')}',\n    last_run_status = 'Success',\n    record_count = @{activity('Copy Data From Accounts').output.rowsCopied}\nWHERE object_name = 'Account'",
 								"type": "Expression"
 							}
 						}
@@ -262,8 +296,6 @@
 				}
 			}
 		],
-		"annotations": [],
-		"lastPublishTime": "2026-01-31T05:34:43Z"
-	},
-	"type": "Microsoft.DataFactory/factories/pipelines"
+		"annotations": []
+	}
 }
