@@ -54,7 +54,7 @@
 							"value": "SELECT Id, IsDeleted, Name, Type, BillingCity, BillingCountry, AccountNumber,\n       Industry, CreatedDate, LastModifiedDate, SystemModstamp\nFROM Account\nWHERE SystemModstamp > @{formatDateTime(activity('Lookup Last Run Time').output.firstRow.last_run_time, 'yyyy-MM-ddTHH:mm:ssZ')}",
 							"type": "Expression"
 						},
-						"includeDeletedObjects": false,
+						"includeDeletedObjects": true,
 						"partitionOption": "AutoDetect"
 					},
 					"sink": {
@@ -293,6 +293,34 @@
 						}
 					],
 					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			},
+			{
+				"name": "Stored Procedure",
+				"description": "Stored procedure to delete marked records from sql table.",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Update Last Run Time",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[sp_DeleteMarkedRecords]"
+				},
+				"linkedServiceName": {
+					"referenceName": "azure_sql_db_ls",
+					"type": "LinkedServiceReference"
 				}
 			}
 		],
