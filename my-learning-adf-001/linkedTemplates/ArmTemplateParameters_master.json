@@ -32,6 +32,9 @@
 		"azure_sql_db_ls_properties_typeProperties_userName": {
 			"value": "srvinodh"
 		},
+		"event_in_vendor_properties_typeProperties_scope": {
+			"value": "/subscriptions/b4fc0073-b6a3-475f-8ea2-b821ee0a9b26/resourceGroups/azureapp-auto-alerts-50a6ee-srvinodh_outlook_com/providers/Microsoft.Storage/storageAccounts/skillupsa001"
+		},
 		"containerUri": {
 			"value": ""
 		},

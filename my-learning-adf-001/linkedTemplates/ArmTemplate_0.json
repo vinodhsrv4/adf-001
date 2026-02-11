@@ -42,12 +42,39 @@
 		"Salesforce1_properties_typeProperties_clientId": {
 			"type": "string",
 			"defaultValue": "3MVG9dAEux2v1sLtus17ywsQwDzMSVOljSOou2kzFecdAy_.Z..aKbrsak6rjY1bb9OkomOWLEr7fqrmYZdxi"
+		},
+		"event_in_vendor_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/b4fc0073-b6a3-475f-8ea2-b821ee0a9b26/resourceGroups/azureapp-auto-alerts-50a6ee-srvinodh_outlook_com/providers/Microsoft.Storage/storageAccounts/skillupsa001"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/pipeline3')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Wait1",
+						"type": "Wait",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"waitTimeInSeconds": 5
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/AzureDataLakeStorage1')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
@@ -269,6 +296,36 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/AzureKeyVault1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/event_in_vendor')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "pipeline3",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "BlobEventsTrigger",
+				"typeProperties": {
+					"blobPathBeginsWith": "/vendor/blobs/",
+					"ignoreEmptyBlobs": false,
+					"scope": "[parameters('event_in_vendor_properties_typeProperties_scope')]",
+					"events": [
+						"Microsoft.Storage.BlobCreated"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/pipeline3')]"
 			]
 		},
 		{

@@ -43,6 +43,10 @@
 			"type": "string",
 			"defaultValue": "srvinodh"
 		},
+		"event_in_vendor_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/b4fc0073-b6a3-475f-8ea2-b821ee0a9b26/resourceGroups/azureapp-auto-alerts-50a6ee-srvinodh_outlook_com/providers/Microsoft.Storage/storageAccounts/skillupsa001"
+		},
 		"containerUri": {
 			"type": "string",
 			"metadata": "URI to storage account containing linked ARM templates"
@@ -96,6 +100,9 @@
 					},
 					"Salesforce1_properties_typeProperties_clientId": {
 						"value": "[parameters('Salesforce1_properties_typeProperties_clientId')]"
+					},
+					"event_in_vendor_properties_typeProperties_scope": {
+						"value": "[parameters('event_in_vendor_properties_typeProperties_scope')]"
 					}
 				}
 			},
