@@ -1,0 +1,24 @@
+{
+	"name": "event_in_vendor",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "pipeline3",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "BlobEventsTrigger",
+		"typeProperties": {
+			"blobPathBeginsWith": "/vendor/blobs/",
+			"ignoreEmptyBlobs": false,
+			"scope": "/subscriptions/b4fc0073-b6a3-475f-8ea2-b821ee0a9b26/resourceGroups/azureapp-auto-alerts-50a6ee-srvinodh_outlook_com/providers/Microsoft.Storage/storageAccounts/skillupsa001",
+			"events": [
+				"Microsoft.Storage.BlobCreated"
+			]
+		}
+	}
+}
