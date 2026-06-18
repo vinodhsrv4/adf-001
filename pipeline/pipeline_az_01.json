@@ -57,10 +57,10 @@
 						"referenceName": "ds_adls_csv_generic",
 						"type": "DatasetReference",
 						"parameters": {
-							"Container": "az_content",
-							"Folder": "pipeline_az_01",
+							"Container": "az-content",
+							"Folder": "output/pipeline-az-01",
 							"File": {
-								"value": "@concat('MonthRevenueTilldate_Starting',\nadddays(startOfMonth(utcNow()), 1, 'ddMMMyyyy'),\n'_Ending',\nformatDateTime(utcNow(), 'ddMMMyyyy')\n)",
+								"value": "@concat('MonthRevenueTilldate_Starting',\nadddays(startOfMonth(utcNow()), -1, 'ddMMMyyyy'),\n'_Ending',\nformatDateTime(utcNow(), 'ddMMMyyyy')\n)",
 								"type": "Expression"
 							}
 						}
