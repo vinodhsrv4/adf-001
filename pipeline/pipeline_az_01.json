@@ -1,0 +1,76 @@
+{
+	"name": "pipeline_az_01",
+	"properties": {
+		"description": "1. How to provide dynamic name to the target file based on pipelinerundate In azure data factory",
+		"activities": [
+			{
+				"name": "Copy data1",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_azureSQLgeneric",
+						"type": "DatasetReference",
+						"parameters": {
+							"TableName": "Account",
+							"SchemaName": "dbo"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_adls_csv_generic",
+						"type": "DatasetReference",
+						"parameters": {
+							"Container": "az_content",
+							"Folder": "pipeline_az_01",
+							"File": {
+								"value": "@concat('MonthRevenueTilldate_Starting',\nadddays(startOfMonth(utcNow()), 1, 'ddMMMyyyy'),\n'_Ending',\nformatDateTime(utcNow(), 'ddMMMyyyy')\n)",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "az_content_yt"
+		},
+		"annotations": []
+	}
+}

@@ -16,6 +16,9 @@
 				"type": "string"
 			}
 		},
+		"folder": {
+			"name": "DS01"
+		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
