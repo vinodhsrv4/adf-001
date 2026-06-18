@@ -1,0 +1,136 @@
+{
+	"name": "pipeline7",
+	"properties": {
+		"description": "API Pagination",
+		"activities": [
+			{
+				"name": "Until1",
+				"type": "Until",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@greater(variables('CurrentPage'), variables('Totalpages'))",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Web1",
+							"type": "WebActivity",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 3,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"method": "GET",
+								"headers": {
+									"x-api-key": "free_user_3EVFEI4ecrpYIVRkuOUTIpP7ciq"
+								},
+								"url": {
+									"value": "@concat('https://reqres.in/api/users?page=', string(variables('CurrentPage')))",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Set Totalpages",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "Web1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "Totalpages",
+								"value": {
+									"value": "@int(activity('Web1').output.total_pages)",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Set Temp",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "Set Totalpages",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "Temp",
+								"value": {
+									"value": "@add(variables('CurrentPage'), 1)",
+									"type": "Expression"
+								}
+							}
+						},
+						{
+							"name": "Set CurrentPage",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "Set Temp",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "CurrentPage",
+								"value": {
+									"value": "@variables('Temp')",
+									"type": "Expression"
+								}
+							}
+						}
+					],
+					"timeout": "0.12:00:00"
+				}
+			}
+		],
+		"variables": {
+			"CurrentPage": {
+				"type": "Integer",
+				"defaultValue": 1
+			},
+			"Totalpages": {
+				"type": "Integer",
+				"defaultValue": 1
+			},
+			"Temp": {
+				"type": "Integer",
+				"defaultValue": 1
+			}
+		},
+		"folder": {
+			"name": "adf-rts-yt"
+		},
+		"annotations": []
+	}
+}
