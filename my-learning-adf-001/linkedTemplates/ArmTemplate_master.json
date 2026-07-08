@@ -94,6 +94,24 @@
 					},
 					"azure_sql_db_ls_properties_typeProperties_userName": {
 						"value": "[parameters('azure_sql_db_ls_properties_typeProperties_userName')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "my-learning-adf-001_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2024-03-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
 					},
 					"Salesforce1_properties_typeProperties_environmentUrl": {
 						"value": "[parameters('Salesforce1_properties_typeProperties_environmentUrl')]"
@@ -106,7 +124,9 @@
 					}
 				}
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'my-learning-adf-001_ArmTemplate_0')]"
+			]
 		}
 	]
 }
