@@ -1,17 +1,14 @@
 {
-	"name": "ds_adls_csv_generic",
+	"name": "DelimitedText2",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureDataLakeStorage1",
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
-			"Container": {
+			"FolderName": {
 				"type": "string"
 			}
-		},
-		"folder": {
-			"name": "DS01"
 		},
 		"annotations": [],
 		"type": "DelimitedText",
@@ -19,13 +16,13 @@
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"fileSystem": {
-					"value": "@dataset().Container",
+					"value": "@dataset().FolderName",
 					"type": "Expression"
 				}
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
-			"firstRowAsHeader": true,
+			"firstRowAsHeader": false,
 			"quoteChar": "\""
 		},
 		"schema": []

@@ -1,33 +1,28 @@
 {
-	"name": "ds_adls_csv_generic",
+	"name": "Json2",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureDataLakeStorage1",
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
-			"Container": {
+			"FileName": {
 				"type": "string"
 			}
 		},
-		"folder": {
-			"name": "DS01"
-		},
 		"annotations": [],
-		"type": "DelimitedText",
+		"type": "Json",
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileSystem": {
-					"value": "@dataset().Container",
+				"fileName": {
+					"value": "@dataset().FileName",
 					"type": "Expression"
-				}
-			},
-			"columnDelimiter": ",",
-			"escapeChar": "\\",
-			"firstRowAsHeader": true,
-			"quoteChar": "\""
+				},
+				"folderPath": "output/pipeline-az-04",
+				"fileSystem": "az-content"
+			}
 		},
-		"schema": []
+		"schema": {}
 	}
 }
