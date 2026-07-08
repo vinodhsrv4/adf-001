@@ -25,6 +25,7 @@
 					],
 					"storeSettings": {
 						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
 						"enablePartitionDiscovery": false
 					},
 					"formatSettings": {
@@ -43,6 +44,7 @@
 						]
 					}
 				],
+				"userProperties": [],
 				"typeProperties": {
 					"items": {
 						"value": "@activity('Get Metadata1').output.childItems",
@@ -63,10 +65,10 @@
 							"userProperties": [],
 							"typeProperties": {
 								"dataset": {
-									"referenceName": "DelimitedText2",
+									"referenceName": "ds_adls_csv_generic",
 									"type": "DatasetReference",
 									"parameters": {
-										"FolderName": {
+										"Container": {
 											"value": "@item().name",
 											"type": "Expression"
 										}
@@ -77,11 +79,61 @@
 								],
 								"storeSettings": {
 									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
 									"enablePartitionDiscovery": false
 								},
 								"formatSettings": {
 									"type": "DelimitedTextReadSettings"
 								}
+							}
+						},
+						{
+							"name": "If Condition1",
+							"type": "IfCondition",
+							"dependsOn": [
+								{
+									"activity": "Get Metadata2",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@empty(activity('Get Metadata2').output.childItems)",
+									"type": "Expression"
+								},
+								"ifFalseActivities": [
+									{
+										"name": "Append variable2",
+										"type": "AppendVariable",
+										"dependsOn": [],
+										"userProperties": [],
+										"typeProperties": {
+											"variableName": "NonEmptyFolder",
+											"value": {
+												"value": "@item.name",
+												"type": "Expression"
+											}
+										}
+									}
+								],
+								"ifTrueActivities": [
+									{
+										"name": "Append variable1",
+										"type": "AppendVariable",
+										"dependsOn": [],
+										"userProperties": [],
+										"typeProperties": {
+											"variableName": "EmptyFolder",
+											"value": {
+												"value": "@item.name",
+												"type": "Expression"
+											}
+										}
+									}
+								]
 							}
 						}
 					]
