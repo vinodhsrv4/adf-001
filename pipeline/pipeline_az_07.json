@@ -63,10 +63,10 @@
 							"userProperties": [],
 							"typeProperties": {
 								"dataset": {
-									"referenceName": "ds_adls_csv_generic",
+									"referenceName": "DelimitedText2",
 									"type": "DatasetReference",
 									"parameters": {
-										"Container": {
+										"FolderName": {
 											"value": "@item().name",
 											"type": "Expression"
 										}
