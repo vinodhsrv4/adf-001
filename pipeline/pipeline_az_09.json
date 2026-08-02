@@ -76,11 +76,6 @@
 				}
 			}
 		],
-		"parameters": {
-			"FileName": {
-				"type": "string"
-			}
-		},
 		"folder": {
 			"name": "az_content_yt"
 		},

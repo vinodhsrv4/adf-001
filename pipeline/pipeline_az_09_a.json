@@ -96,6 +96,9 @@
 				"defaultValue": "False"
 			}
 		},
+		"folder": {
+			"name": "az_content_yt"
+		},
 		"annotations": []
 	}
 }
